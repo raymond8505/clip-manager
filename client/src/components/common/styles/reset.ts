@@ -57,6 +57,6 @@ body,html
 {
 background-color: white;
 font-family: Roboto, Arial, _sans;
-font-size: 12px;
+font-size: 16px;
 }
 `;

@@ -1,18 +1,11 @@
-So I can hit the ground running on new projects
+# What?
 
-# Client
+Manage video clips containing verbal commands
 
-1. [Vite](https://vitejs.dev/) React with Typescript
-2. [Emotion](https://emotion.sh/docs/introduction) for styles
-3. [Ant](https://ant.design/components/overview) for components
-4. [Zustand](https://github.com/pmndrs/zustand) for store
+# Who?
 
-# App Server
+Me, mostly
 
-Node with Web Socket connection to client. This is primarily for personal projects running at home, so server does not authenticate!
+# Why?
 
-# DB Server
-
-[Pocketbase](https://pocketbase.io/)
-
-grab the executable for your OS and put it in the db dir
+Recording, clipping and publishing gaming replays is tedious and there's a lot that can be automated. Also this seemed like a fun project.

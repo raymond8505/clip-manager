@@ -8,8 +8,13 @@ export const useServer = (
     onMessage,
   });
 
+  function sendJson(obj: any) {
+    sendMessage(JSON.stringify(obj));
+  }
+
   return {
     send: sendMessage,
+    sendJson,
     readyState,
   };
 };

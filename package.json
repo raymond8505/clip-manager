@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "yarn client:dev",
     "client:dev": "cd ./client && yarn dev",
     "client:build": "cd ./client && tsc && yarn build",
     "client:lint": "cd ./client && eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",

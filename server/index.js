@@ -1,28 +1,18 @@
-// @ts-ignore
+const { onMessage, onConnection, init } = require("./app/index");
 const WebSocket = require("ws");
-const server = startServer();
-/**
- * Starts the server at the given port
- * @param {Int} port the port to listen on
- * @returns WebSocketServer
- */
-function startServer(port = 1596) {
-  // @ts-ignore
-  const server = new WebSocket.Server({
-    port,
-  });
+const port = 1596;
 
+const server = new WebSocket.Server({
+  port,
+});
+
+init(server).then(() => {
   console.log(`Starting Web Socket server at port ${port}`);
-
   server.on("connection", (sender) => {
-    console.log("client connected");
+    onConnection(sender, server);
 
     sender.on("message", (msg) => {
-      console.log(msg.toString());
+      onMessage(msg, sender, server);
     });
-
-    sender.send("hello");
   });
-
-  return server;
-}
+});
