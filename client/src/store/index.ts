@@ -1,15 +1,19 @@
 import { create } from "zustand";
 
+export interface UnParsedVideo {
+  name: string;
+  path: string;
+}
 export interface Store {
-  count: number;
-  setCount: (n: number) => void;
+  unparsedVideos: UnParsedVideo[];
+  setUnparsedVideos: (videos: UnParsedVideo[]) => void;
 }
 export const useStore = create<Store>(
   (set, get): Store => ({
-    count: 0,
-    setCount: (n) =>
+    unparsedVideos: [],
+    setUnparsedVideos: (videos) =>
       set({
-        count: n,
+        unparsedVideos: [...get().unparsedVideos, ...videos],
       }),
   })
 );
