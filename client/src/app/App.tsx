@@ -5,7 +5,7 @@ import { ResizeHandle } from "./ResizeHandle";
 
 export const App = () => {
   const { sendJson } = useServer((msg) => {
-    console.log(msg);
+    console.log(msg.data);
   });
 
   return (
