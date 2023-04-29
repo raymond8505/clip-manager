@@ -12,7 +12,8 @@
     "client:preview": "cd ./client && yarn preview",
     "server:db": "cd ./db && pocketbase serve",
     "server:app": "cd ./server && node index.js",
-    "server:app:dev": "cd ./server && nodemon index.js"
+    "server:app:dev": "cd ./server && nodemon index.js",
+    "server:http": "http-server ./media -p 8080"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   "homepage": "https://github.com/raymond8505/skeleton#readme",
   "dependencies": {
     "@types/websocket": "^1.0.5",
+    "http-server": "^14.1.1",
     "pocketbase": "^0.14.0",
     "react-use-websocket": "^4.3.1",
     "ws": "^8.13.0"

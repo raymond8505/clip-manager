@@ -1,3 +1,5 @@
+const { getUnparsedVideos } = require("./clipper");
+
 /**
  * Handles all messages coming from the client. This is your entry point to your server's actual
  * functionality
@@ -6,7 +8,6 @@
  * @param server:WebSocketServer
  */
 function onMessage(msg, sender, server) {
-  sender.send("Server Connected clip masnager");
   console.log("message received", msg.toString());
 }
 
@@ -16,7 +17,16 @@ function onMessage(msg, sender, server) {
  * @param socket:WebSocket
  * @param server:WebSocketServer
  */
-function onConnection(socket, server) {}
+function onConnection(socket, server) {
+  const unparsedVids = getUnparsedVideos();
+
+  socket.send(
+    JSON.stringify({
+      action: "unparsed-videos",
+      data: unparsedVids,
+    })
+  );
+}
 
 /**
  * Called before the socket server is initialized. Fires before the first connection
