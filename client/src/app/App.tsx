@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const App = () => {
-  const { unparsedVideos } = useStore();
+  const { unparsedVideos, clips } = useStore();
 
   useServer();
 
@@ -18,7 +18,7 @@ export const App = () => {
       <ToastContainer />
       <MainWrapper>
         <PanelGroup direction="horizontal">
-          <SidePanel unparsedVideos={unparsedVideos} />
+          <SidePanel unparsedVideos={unparsedVideos} clips={clips} />
           <ResizeHandle direction="horizontal" />
           <EditorPanel />
         </PanelGroup>

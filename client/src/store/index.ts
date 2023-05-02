@@ -16,6 +16,8 @@ export interface UnparsedVideo {
   parsingProgress?: Progress["progress"];
 }
 
+export type Clip = UnparsedVideo;
+
 export interface Word {
   end: number;
   start: number;
@@ -25,12 +27,20 @@ export interface Word {
 export interface Store {
   unparsedVideos: UnparsedVideo[];
   setUnparsedVideos: (videos: UnparsedVideo[]) => void;
+  clips: Clip[];
+  setClips: (clips: Clip[]) => void;
   updateParsingProgress: (progress: Progress) => void;
   getUnparsedVideoIndexByName: (name: string) => number | undefined;
 }
 export const useStore = create<Store>(
   (set, get): Store => ({
     unparsedVideos: [],
+    setUnparsedVideos: (unparsedVideos) =>
+      set({
+        unparsedVideos,
+      }),
+    clips: [],
+    setClips: (clips) => set({ clips }),
     getUnparsedVideoIndexByName: (name) =>
       get().unparsedVideos.findIndex((vid) => vid.name === name),
     updateParsingProgress: (progress) => {
@@ -50,15 +60,5 @@ export const useStore = create<Store>(
         });
       }
     },
-    setUnparsedVideos: (videos) =>
-      set({
-        unparsedVideos: videos,
-        // [
-        //   ...get().unparsedVideos.filter(
-        //     (vid) => videos.findIndex((vid2) => vid2.name !== vid.name) === -1
-        //   ),
-        //   ...videos,
-        // ],
-      }),
   })
 );

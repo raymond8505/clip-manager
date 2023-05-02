@@ -11,10 +11,6 @@ const InnerButton = styled(ListItemButton)`
   display: flex;
   justify-content: space-between;
   position: relative;
-
-  &::after {
-    content: "";
-  }
 `;
 
 const Progress = styled.div<{ width: number }>`

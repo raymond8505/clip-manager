@@ -1,4 +1,4 @@
-const { getUnparsedVideos } = require("./clipper");
+const { getUnparsedVideos, getClips } = require("./clipper");
 const parseVideo = require("./clipper/parseVideo");
 
 let socket;
@@ -49,6 +49,7 @@ function onMessage(rawMsg) {
           });
         },
       });
+      break;
   }
 }
 
@@ -63,6 +64,10 @@ function onConnection(socketIn, serverIn) {
   server = serverIn;
 
   sendUnparsedVideos();
+  sendMessage("connected", {
+    unparsedVideos: getUnparsedVideos(),
+    clips: getClips(),
+  });
 }
 
 /**
