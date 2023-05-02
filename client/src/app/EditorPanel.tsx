@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { useStore } from "../store";
 import { Panel } from "./App.styles";
+import { VideoCameraOutlined } from "@ant-design/icons";
 
 const Video = styled.video`
   width: 100%;
@@ -8,6 +9,7 @@ const Video = styled.video`
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
   padding: 1vw;
@@ -18,15 +20,27 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 6px;
 `;
+const Empty = styled(VideoCameraOutlined)`
+  opacity: 0.05;
+
+  svg {
+    width: 25vmin;
+    height: 25vmin;
+  }
+`;
 export const EditorPanel = () => {
   const { currentClip } = useStore();
   return (
     <Panel collapsible={true} order={2}>
       <Wrapper>
-        <VideoWrapper>
-          <Title>{currentClip?.name}</Title>
-          {currentClip && <Video controls src={currentClip.paths.video} />}
-        </VideoWrapper>
+        {currentClip ? (
+          <VideoWrapper>
+            <Title>{currentClip.name}</Title>
+            <Video controls src={currentClip.paths.video} />
+          </VideoWrapper>
+        ) : (
+          <Empty />
+        )}
       </Wrapper>
     </Panel>
   );
