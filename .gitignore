@@ -24,6 +24,6 @@ dist-ssr
 *.sw?
 
 pocketbase.exe
-*.mp4
-*.wav
+/media/**/*.*
+
 model
