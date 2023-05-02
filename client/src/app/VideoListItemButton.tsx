@@ -4,6 +4,7 @@ import { ListItemButton } from "./App.styles";
 import { secondsToHMS } from "./helpers";
 import { useCallback } from "react";
 import { useServer } from "./useServer";
+import { toast } from "react-toastify";
 
 const InnerButton = styled(ListItemButton)`
   display: flex;
@@ -36,6 +37,7 @@ export const VideoListItemButton = ({ video }: Props) => {
   const { parseVideo } = useServer();
 
   const onClick = useCallback(() => {
+    toast(`Parsing started for "${video.name}"`);
     parseVideo(video);
   }, [video]);
   return (
