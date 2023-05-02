@@ -44,10 +44,11 @@ function getClips() {
     const vidClip = `${clipsDir}/${vid}`;
     const length = getVideoLength(vidClip);
 
-    const video = path.join(httpClipsDir, vid).replace(/\\/g, "/");
+    const video = `${httpClipsDir}/${vid}`.replace(/\\/g, "/");
     const image = getClipThumbnail(vidClip, httpClipThumbsDir);
     return {
       name: vid,
+      length,
       paths: {
         video,
         image,

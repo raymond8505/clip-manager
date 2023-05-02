@@ -36,9 +36,16 @@ export interface Store {
   setClips: (clips: IClip[]) => void;
   updateParsingProgress: (progress: Progress) => void;
   getUnparsedVideoIndexByName: (name: string) => number | undefined;
+  currentClip: IClip | null;
+  setCurrentClip: (clip: IClip) => void;
 }
 export const useStore = create<Store>(
   (set, get): Store => ({
+    currentClip: null,
+    setCurrentClip: (clip) =>
+      set({
+        currentClip: clip,
+      }),
     unparsedVideos: [],
     setUnparsedVideos: (unparsedVideos) =>
       set({
