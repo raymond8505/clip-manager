@@ -36,6 +36,7 @@ const ResizeHandleWapper = styled.div`
     flex-direction: ${(props) =>
       props.direction === "horizontal" ? "row" : "column"};
       font-size: 10px;
+    background: #2a2a2a;
 `;
 
 export const ResizeHandle = (props: ResizeHandleProps) => {
