@@ -31,6 +31,7 @@
     "http-server": "^14.1.1",
     "pocketbase": "^0.14.0",
     "react-use-websocket": "^4.3.1",
+    "vosk": "^0.3.39",
     "ws": "^8.13.0"
   },
   "devDependencies": {
