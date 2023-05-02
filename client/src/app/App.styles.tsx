@@ -32,6 +32,10 @@ export const UnstyledButton = styled.button`
   font-size: 1em;
   font-weight: inherit;
   cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `;
 
 export const ListItemButton = styled(UnstyledButton)`
