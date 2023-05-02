@@ -13,7 +13,7 @@ export enum ServerMessageAction {
   PARSE_VIDEO = "parse-video",
   SERVER_LOG = "server-log",
   WORD_PROGRESS = "word-progress",
-  CONNECTED = "connected",
+  UPDATE_VIDEOS = "update-videos",
 }
 
 export const useServer = () => {
@@ -33,7 +33,7 @@ export const useServer = () => {
       case ServerMessageAction.WORD_PROGRESS:
         updateParsingProgress(msg.data);
         break;
-      case ServerMessageAction.CONNECTED:
+      case ServerMessageAction.UPDATE_VIDEOS:
         setUnparsedVideos(msg.data.unparsedVideos);
         setClips(msg.data.clips);
         break;

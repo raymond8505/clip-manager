@@ -1,4 +1,7 @@
 const { execSync } = require("child_process");
+const { basename } = require("path");
+const { clipThumbsDir, httpClipThumbsDir } = require("./paths");
+const { existsSync } = require("fs");
 
 function secondsToHMS(value) {
   const sec = parseInt(value, 10); // convert value to number if it's string
@@ -117,6 +120,37 @@ const getVideoLength = (path) => {
 
   return Number(length.toString().trim());
 };
+
+function fsThumbPath(clipPath) {
+  const videoName = basename(clipPath);
+  console.log("======== INDEX !!!!!!!!!!!!", clipThumbsDir);
+  return `${clipThumbsDir}/${videoName}.jpg`;
+}
+
+function httpThumbPath(clipPath) {
+  const videoName = basename(clipPath);
+  return `${httpClipThumbsDir}/${videoName}.jpg`;
+}
+
+function makeClipThumbnail(clipPath) {
+  const thumbPath = fsThumbPath(clipPath);
+  execSync(
+    `ffmpeg -i "${clipPath}" -loglevel error -ss 00:00:01.000 -vframes 1 ${thumbPath}`
+  );
+
+  return thumbPath;
+}
+
+function getClipThumbnail(clipPath, returnBase = clipThumbsDir) {
+  const clipName = basename(clipPath);
+  const toRet = `${returnBase}/${clipName}.jpg`;
+
+  if (!existsSync(fsThumbPath(clipPath))) {
+    makeClipThumbnail(clipPath);
+  }
+
+  return toRet;
+}
 module.exports = {
   getDeletesFromWords,
   getClipsFromWords,
@@ -129,4 +163,8 @@ module.exports = {
   hasClip,
   hasDelete,
   getVideoLength,
+  makeClipThumbnail,
+  fsThumbPath,
+  httpThumbPath,
+  getClipThumbnail,
 };

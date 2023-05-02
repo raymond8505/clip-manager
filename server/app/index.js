@@ -40,7 +40,7 @@ function onMessage(rawMsg) {
           log(`Finished Parsing Audio for ${video}`);
         },
         onClipsParsed: (clips) => {
-          sendUnparsedVideos();
+          sendUpdateVideos();
         },
         onWordProgress: (progress) => {
           sendMessage("word-progress", {
@@ -53,6 +53,13 @@ function onMessage(rawMsg) {
   }
 }
 
+function sendUpdateVideos() {
+  sendMessage("update-videos", {
+    unparsedVideos: getUnparsedVideos(),
+    clips: getClips(),
+  });
+}
+
 /**
  * When the client makes a connection. Use this to initialize stuff for
  * the server app
@@ -63,11 +70,7 @@ function onConnection(socketIn, serverIn) {
   socket = socketIn;
   server = serverIn;
 
-  sendUnparsedVideos();
-  sendMessage("connected", {
-    unparsedVideos: getUnparsedVideos(),
-    clips: getClips(),
-  });
+  sendUpdateVideos();
 }
 
 /**

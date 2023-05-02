@@ -1,22 +1,11 @@
-const { secondsToHMS } = require("./helpers");
-const { existsSync, readdirSync, unlinkSync, renameSync } = require("fs");
+const { getClipThumbnail } = require("./helpers");
+const { existsSync, unlinkSync, renameSync } = require("fs");
 const { execSync } = require("child_process");
-const {
-  getVideoLength,
-  unParsedDir,
-  parsedDir,
-  rawAudioDir,
-  clipsVideoDir,
-} = require("./index");
+const { unParsedDir, parsedDir, rawAudioDir, clipsDir } = require("./paths");
 const reader = require("./vosk-reader.js");
-const { getClipsFromWords } = require("./helpers");
+const { getClipsFromWords, getVideoLength } = require("./helpers");
 
-const readAudio = async (
-  audioToParse,
-  duration,
-  onWordProgress,
-  onAudioParsed
-) => {
+const readAudio = async (audioToParse, duration, onWordProgress) => {
   const results = [];
 
   return new Promise((resolve) => {
@@ -64,7 +53,7 @@ async function parseVideo(videoToParse, options) {
     `ffmpeg -i "${unParsedDir}/${videoToParse}" -loglevel error -ac 1 -ar 16000 -acodec pcm_s16le "${audioToParse}"`
   );
 
-  log(`Created  ${audioToParse}`);
+  log(`Created ${audioToParse}`);
 
   const duration = getVideoLength(videoToParsePath);
   const results = await readAudio(audioToParse, duration, onWordProgress);
@@ -75,26 +64,28 @@ async function parseVideo(videoToParse, options) {
     return array.findIndex((clip2) => clip2.end === clip.end) === index;
   });
 
-  log("found", clips.length, "clips");
+  log(`found ${clips.length} clips`);
 
   clips.forEach((clip, i) => {
     const start = Math.max(clip.end - 20, 0);
     const end = Math.min(clip.end + 10, duration);
 
-    const clipPath = `${clipsVideoDir}/${videoToParse}_${i}.mp4`;
+    const clipPath = `${clipsDir}/${videoToParse}_${i}.mp4`;
 
     if (existsSync(clipPath)) {
       unlinkSync(clipPath);
     }
 
-    log("clipping", i + 1, "/", clips.length);
+    log(`clipping ${i + 1} / ${clips.length}`);
 
     execSync(
       `ffmpeg -i ${videoToParsePath}  -loglevel error -ss ${start} -to ${end} ${clipPath}`
     );
+
+    getClipThumbnail(clipPath);
   });
 
-  log("moving", videoToParse, "to parsed");
+  log(`moving ${videoToParse} to parsed`);
   renameSync(videoToParsePath, `${parsedDir}/${videoToParse}`);
   log("DONE!");
   onClipsParsed(clips);
