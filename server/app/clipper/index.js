@@ -20,7 +20,7 @@ const httpUnParsedDir = `${httpVideoDir}/unparsed`;
 const httpClipsDir = `${httpVideoDir}/clips`;
 const httpClipThumbsDir = `${httpClipsDir}/thumbs`;
 
-const { getVideoLength } = require("./helpers");
+const { getVideoLength, getClipThumbnail } = require("./helpers");
 function getVideoFiles(dir) {
   return readdirSync(dir).filter((vid) => {
     return vid.search(/(mp4)$/) !== -1;
@@ -41,9 +41,18 @@ function getUnparsedVideos() {
 
 function getClips() {
   return getVideoFiles(clipsDir).map((vid) => {
-    const length = getVideoLength(`${clipsDir}/${vid}`);
+    const vidClip = `${clipsDir}/${vid}`;
+    const length = getVideoLength(vidClip);
 
-    return { name: vid, path: path.join(httpClipsDir, vid), length };
+    const video = path.join(httpClipsDir, vid).replace(/\\/g, "/");
+    const image = getClipThumbnail(vidClip, httpClipThumbsDir);
+    return {
+      name: vid,
+      paths: {
+        video,
+        image,
+      },
+    };
   });
 }
 module.exports = {

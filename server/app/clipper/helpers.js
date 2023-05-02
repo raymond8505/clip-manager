@@ -123,7 +123,6 @@ const getVideoLength = (path) => {
 
 function fsThumbPath(clipPath) {
   const videoName = basename(clipPath);
-  console.log("======== INDEX !!!!!!!!!!!!", clipThumbsDir);
   return `${clipThumbsDir}/${videoName}.jpg`;
 }
 
@@ -144,6 +143,8 @@ function makeClipThumbnail(clipPath) {
 function getClipThumbnail(clipPath, returnBase = clipThumbsDir) {
   const clipName = basename(clipPath);
   const toRet = `${returnBase}/${clipName}.jpg`;
+
+  console.log({ clipName, clipPath, toRet });
 
   if (!existsSync(fsThumbPath(clipPath))) {
     makeClipThumbnail(clipPath);

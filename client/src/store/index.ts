@@ -16,7 +16,12 @@ export interface UnparsedVideo {
   parsingProgress?: Progress["progress"];
 }
 
-export type Clip = UnparsedVideo;
+export interface IClip extends Omit<UnparsedVideo, "parsingProgress" | "path"> {
+  paths: {
+    video: string;
+    image: string;
+  };
+}
 
 export interface Word {
   end: number;
@@ -27,8 +32,8 @@ export interface Word {
 export interface Store {
   unparsedVideos: UnparsedVideo[];
   setUnparsedVideos: (videos: UnparsedVideo[]) => void;
-  clips: Clip[];
-  setClips: (clips: Clip[]) => void;
+  clips: IClip[];
+  setClips: (clips: IClip[]) => void;
   updateParsingProgress: (progress: Progress) => void;
   getUnparsedVideoIndexByName: (name: string) => number | undefined;
 }
