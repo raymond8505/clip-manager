@@ -4,8 +4,11 @@ const videoDir = path.join(__dirname, `../../../media/video`);
 const unParsedDir = `${videoDir}/unparsed`;
 const parsedDir = `${videoDir}/parsed`;
 const rawAudioDir = `${audioDir}/raw`;
+
 const clipsDir = `${videoDir}/clips`;
 const clipThumbsDir = `${clipsDir}/thumbs`;
+const savedClipsDir = `${clipsDir}/saved`;
+const reviewClipsDir = `${clipsDir}/review`;
 
 const httpRoot = "http://localhost:8080";
 const httpVideoDir = `${httpRoot}/video`;
@@ -26,4 +29,6 @@ module.exports = {
   httpUnParsedDir,
   httpClipsDir,
   httpClipThumbsDir,
+  savedClipsDir,
+  reviewClipsDir,
 };

@@ -1,13 +1,14 @@
 import { PanelGroup } from "react-resizable-panels";
 import { Panel } from "./App.styles";
 import { ResizeHandle } from "./ResizeHandle";
-import { IClip as ClipType, UnparsedVideo } from "../store";
+import { IClip as ClipType, IClips, UnparsedVideo } from "../store";
 import { VideoListItemButton } from "./VideoListItemButton";
 import { Clip } from "./Clip";
 import styled from "@emotion/styled";
+import { Tabs } from "antd";
 export interface SidePanelProps {
   unparsedVideos: UnparsedVideo[];
-  clips: ClipType[];
+  clips: IClips;
 }
 const Clips = styled.ul`
   display: flex;
@@ -38,11 +39,27 @@ export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
         <ResizeHandle direction="vertical" />
         <Panel collapsible={true} order={2}>
           <h2>Parsed Clips</h2>
-          <Clips>
-            {clips?.map((clip, i) => {
-              return <Clip clip={clip} key={i} />;
-            })}
-          </Clips>
+
+          <Tabs
+            items={[
+              {
+                label: "To Review",
+                key: "review",
+                children: (
+                  <Clips>
+                    {clips?.review?.map((clip, i) => {
+                      return <Clip clip={clip} key={i} />;
+                    })}
+                  </Clips>
+                ),
+              },
+              {
+                label: "Saved",
+                key: "saved",
+                children: `saved`,
+              },
+            ]}
+          />
         </Panel>
       </PanelGroup>
     </Panel>

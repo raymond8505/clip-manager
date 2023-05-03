@@ -6,19 +6,32 @@ const {
   execS,
 } = require("fs");
 const path = require("path");
-const audioDir = path.join(__dirname, `../../../media/audio`);
-const videoDir = path.join(__dirname, `../../../media/video`);
-const unParsedDir = `${videoDir}/unparsed`;
-const parsedDir = `${videoDir}/parsed`;
-const rawAudioDir = `${audioDir}/raw`;
-const clipsDir = `${videoDir}/clips`;
-const clipThumbsDir = `${clipsDir}/thumbs`;
+// const audioDir = path.join(__dirname, `../../../media/audio`);
+// const videoDir = path.join(__dirname, `../../../media/video`);
+// const unParsedDir = `${videoDir}/unparsed`;
+// const parsedDir = `${videoDir}/parsed`;
+// const rawAudioDir = `${audioDir}/raw`;
+// const clipsDir = `${videoDir}/clips`;
+// const clipThumbsDir = `${clipsDir}/thumbs`;
 
-const httpRoot = "http://localhost:8080";
-const httpVideoDir = `${httpRoot}/video`;
-const httpUnParsedDir = `${httpVideoDir}/unparsed`;
-const httpClipsDir = `${httpVideoDir}/clips`;
-const httpClipThumbsDir = `${httpClipsDir}/thumbs`;
+// const httpRoot = "http://localhost:8080";
+// const httpVideoDir = `${httpRoot}/video`;
+// const httpUnParsedDir = `${httpVideoDir}/unparsed`;
+// const httpClipsDir = `${httpVideoDir}/clips`;
+// const httpClipThumbsDir = `${httpClipsDir}/thumbs`;
+const {
+  audioDir,
+  videoDir,
+  unParsedDir,
+  parsedDir,
+  rawAudioDir,
+  clipsDir,
+  clipThumbsDir,
+  httpUnParsedDir,
+  httpClipsDir,
+  httpClipThumbsDir,
+  reviewClipsDir,
+} = require("./paths");
 
 const { getVideoLength, getClipThumbnail } = require("./helpers");
 function getVideoFiles(dir) {
@@ -40,27 +53,30 @@ function getUnparsedVideos() {
 }
 
 function getClips() {
-  return getVideoFiles(clipsDir).map((vid) => {
-    const vidClip = `${clipsDir}/${vid}`;
-    const length = getVideoLength(vidClip);
+  return {
+    review: getVideoFiles(reviewClipsDir).map((vid) => {
+      const vidClip = `${reviewClipsDir}/${vid}`;
+      const length = getVideoLength(vidClip);
 
-    const video = `${httpClipsDir}/${vid}`.replace(/\\/g, "/");
-    const image = getClipThumbnail(vidClip, httpClipThumbsDir);
-    return {
-      name: vid,
-      length,
-      paths: {
-        video,
-        image,
-      },
-    };
-  });
+      const video = `${httpClipsDir}/${vid}`.replace(/\\/g, "/");
+      const image = getClipThumbnail(vidClip, httpClipThumbsDir);
+
+      return {
+        name: vid,
+        length,
+        paths: {
+          video,
+          image,
+        },
+      };
+    }),
+    saved: {},
+  };
 }
 module.exports = {
   getUnparsedVideos,
   getVideoLength,
   getClips,
-  path,
   audioDir,
   videoDir,
   unParsedDir,

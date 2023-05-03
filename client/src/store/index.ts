@@ -23,6 +23,11 @@ export interface IClip extends Omit<UnparsedVideo, "parsingProgress" | "path"> {
   };
 }
 
+export interface IClips {
+  review: IClip[];
+  saved: IClip[];
+}
+
 export interface Word {
   end: number;
   start: number;
@@ -32,7 +37,7 @@ export interface Word {
 export interface Store {
   unparsedVideos: UnparsedVideo[];
   setUnparsedVideos: (videos: UnparsedVideo[]) => void;
-  clips: IClip[];
+  clips: IClips;
   setClips: (clips: IClip[]) => void;
   updateParsingProgress: (progress: Progress) => void;
   getUnparsedVideoIndexByName: (name: string) => number | undefined;
