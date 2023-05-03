@@ -144,8 +144,6 @@ function getClipThumbnail(clipPath, returnBase = clipThumbsDir) {
   const clipName = basename(clipPath);
   const toRet = `${returnBase}/${clipName}.jpg`;
 
-  console.log({ clipName, clipPath, toRet });
-
   if (!existsSync(fsThumbPath(clipPath))) {
     makeClipThumbnail(clipPath);
   }

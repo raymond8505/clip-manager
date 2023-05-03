@@ -45,7 +45,10 @@ export const VideoListItemButton = ({ video }: Props) => {
     >
       <span>{video.name}</span>
       {video.parsingProgress !== undefined && (
-        <span>{Math.round(video.parsingProgress.perc * 100)}%</span>
+        <span>
+          {Math.round(video.parsingProgress.perc * 100)}% "
+          {video.parsingProgress.word[0].word}"
+        </span>
       )}
       <Length>{secondsToHMS(video.length)}</Length>
       {video.parsingProgress && (
