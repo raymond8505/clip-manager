@@ -56,7 +56,13 @@ export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
               {
                 label: "Saved",
                 key: "saved",
-                children: `saved`,
+                children: (
+                  <Clips>
+                    {clips?.saved?.map((clip, i) => {
+                      return <Clip clip={clip} key={i} />;
+                    })}
+                  </Clips>
+                ),
               },
             ]}
           />
