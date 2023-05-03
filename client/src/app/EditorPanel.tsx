@@ -36,7 +36,15 @@ export const EditorPanel = () => {
         {currentClip ? (
           <VideoWrapper>
             <Title>{currentClip.name}</Title>
-            <Video controls src={currentClip.paths.video} />
+            <Video
+              controls
+              autoPlay
+              src={currentClip.paths.video}
+              loop={true}
+              // onCanPlay={(e) => {
+              //   (e.target as HTMLVideoElement).play();
+              // }}
+            />
           </VideoWrapper>
         ) : (
           <Empty />

@@ -35,7 +35,7 @@ const {
   trashClipsDir,
 } = require("./paths");
 
-const { getVideoLength, getClipThumbnail } = require("./helpers");
+const { getVideoLength, getClipThumbnail, fsThumbPath } = require("./helpers");
 function getVideoFiles(dir) {
   return readdirSync(dir).filter((vid) => {
     return vid.search(/(mp4)$/) !== -1;
@@ -88,11 +88,17 @@ const moveClip = (clipName, fromDir, toDir) =>
     `${clipsDir}/${fromDir}/${clipName}`,
     `${clipsDir}/${toDir}/${clipName}`
   );
+
+function deleteClip(clipName) {
+  unlinkSync(`${trashClipsDir}/${clipName}`);
+  unlinkSync(getClipThumbnail(clipName), fsThumbPath);
+}
 module.exports = {
   getUnparsedVideos,
   getVideoLength,
   getClips,
   moveClip,
+  deleteClip,
   audioDir,
   videoDir,
   unParsedDir,

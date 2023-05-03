@@ -134,7 +134,7 @@ function httpThumbPath(clipPath) {
 function makeClipThumbnail(clipPath) {
   const thumbPath = fsThumbPath(clipPath);
   execSync(
-    `ffmpeg -i "${clipPath}" -loglevel error -ss 00:00:01.000 -vframes 1 ${thumbPath}`
+    `ffmpeg -i "${clipPath}" -loglevel error -ss 00:00:01.000 -vframes 1 "${thumbPath}"`
   );
 
   return thumbPath;
