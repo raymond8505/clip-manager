@@ -1,18 +1,23 @@
 import { PanelGroup } from "react-resizable-panels";
 import { Panel } from "./App.styles";
 import { ResizeHandle } from "./ResizeHandle";
-import { IClip as ClipType, IClips, UnparsedVideo } from "../store";
+import { IClips, UnparsedVideo } from "../store";
 import { VideoListItemButton } from "./VideoListItemButton";
 import { Clip } from "./Clip";
 import styled from "@emotion/styled";
-import { Tabs } from "antd";
+import { Button, Tabs } from "antd";
+import { useCallback } from "react";
 export interface SidePanelProps {
   unparsedVideos: UnparsedVideo[];
   clips: IClips;
 }
+const EmptyTrash = styled(Button)`
+  float: right;
+`;
 const Clips = styled.ul`
   display: flex;
   flex-wrap: wrap;
+  clear: both;
   /* container-type: inline-size;
   @container (min-width: 25vw) {
     li {
@@ -21,6 +26,9 @@ const Clips = styled.ul`
   } */
 `;
 export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
+  const onEmptyTrashClick = useCallback(() => {
+    confirm("For Reals?");
+  }, []);
   return (
     <Panel collapsible={true} order={1} defaultSize={20}>
       <PanelGroup direction="vertical">
@@ -29,7 +37,7 @@ export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
           <ul>
             {unparsedVideos.map((video, i) => {
               return (
-                <li key={i}>
+                <li key={`${i}-${video.name}`}>
                   <VideoListItemButton video={video} />
                 </li>
               );
@@ -48,7 +56,12 @@ export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
                 children: (
                   <Clips>
                     {clips?.review?.map((clip, i) => {
-                      return <Clip clip={clip} key={i} />;
+                      return (
+                        <Clip
+                          clip={clip}
+                          key={window.btoa(JSON.stringify([clip, "review"]))}
+                        />
+                      );
                     })}
                   </Clips>
                 ),
@@ -59,9 +72,40 @@ export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
                 children: (
                   <Clips>
                     {clips?.saved?.map((clip, i) => {
-                      return <Clip clip={clip} key={i} />;
+                      return (
+                        <Clip
+                          clip={clip}
+                          key={window.btoa(JSON.stringify([clip, "saved"]))}
+                        />
+                      );
                     })}
                   </Clips>
+                ),
+              },
+              {
+                label: "Trash",
+                key: "trash",
+                children: (
+                  <>
+                    {clips?.trash?.length > 0 && (
+                      <EmptyTrash
+                        title="Empty Trash (FOREVER)"
+                        onClick={onEmptyTrashClick}
+                      >
+                        Empty Trash
+                      </EmptyTrash>
+                    )}
+                    <Clips>
+                      {clips?.trash?.map((clip, i) => {
+                        return (
+                          <Clip
+                            clip={clip}
+                            key={window.btoa(JSON.stringify([clip, "trash"]))}
+                          />
+                        );
+                      })}
+                    </Clips>
+                  </>
                 ),
               },
             ]}

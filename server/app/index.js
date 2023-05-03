@@ -1,4 +1,4 @@
-const { getUnparsedVideos, getClips } = require("./clipper");
+const { getUnparsedVideos, getClips, moveClip } = require("./clipper");
 const parseVideo = require("./clipper/parseVideo");
 
 let socket;
@@ -32,8 +32,13 @@ function onMessage(rawMsg) {
   const msg = JSON.parse(rawMsg.toString());
   const video = msg.data;
   switch (msg.action) {
+    case "move-clip":
+      const { clip, from, to } = msg.data;
+      moveClip(clip, from, to);
+      log(`${clip} move to ${to}`);
+      sendUpdateVideos();
+      break;
     case "parse-video":
-      console.log("parse video", video);
       parseVideo(video, {
         log,
         onAudioParsed: (results) => {

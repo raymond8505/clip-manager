@@ -9,6 +9,7 @@ const clipsDir = `${videoDir}/clips`;
 const clipThumbsDir = `${clipsDir}/thumbs`;
 const savedClipsDir = `${clipsDir}/saved`;
 const reviewClipsDir = `${clipsDir}/review`;
+const trashClipsDir = `${clipsDir}/trash`;
 
 const httpRoot = "http://localhost:8080";
 const httpVideoDir = `${httpRoot}/video`;
@@ -31,4 +32,5 @@ module.exports = {
   httpClipThumbsDir,
   savedClipsDir,
   reviewClipsDir,
+  trashClipsDir,
 };

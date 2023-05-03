@@ -1,8 +1,14 @@
 import styled from "@emotion/styled";
 import { IClip, useStore } from "../store";
 import { UnstyledButton } from "./App.styles";
-import { PlayCircleOutlined } from "@ant-design/icons";
-import { useCallback } from "react";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  DeleteOutlined,
+  PlayCircleOutlined,
+} from "@ant-design/icons";
+import { useCallback, useState } from "react";
+import { useServer } from "./useServer";
 
 interface Props {
   clip: IClip;
@@ -14,7 +20,7 @@ const Image = styled.img`
   margin: 0 6px 0 0;
 `;
 
-const Wrapper = styled.li<{ current: boolean }>`
+const Wrapper = styled.li<{ current: boolean; moving: boolean }>`
   width: 100%;
   max-width: 300px;
   padding: 6px 4px 0px;
@@ -28,38 +34,107 @@ const Wrapper = styled.li<{ current: boolean }>`
     clear: both;
     height: 6px;
   }
-
   &:hover {
     background-color: rgb(0 0 0 / 0.2);
   }
+
+  svg {
+    color: white;
+    width: 25px;
+    height: 25px;
+  }
+
+  pointer-events: ${(props) => (props.moving ? "none" : "all")};
+  opacity: ${(props) => (props.moving ? 0.1 : 1)};
 `;
 
 const ButtonWrapper = styled.div`
   padding: 6px 0;
 `;
 
-const PlayButton = styled(UnstyledButton)`
-  color: white;
-
+const ClipButton = styled(UnstyledButton)`
+  margin-right: 6px;
+`;
+const PlayButton = styled(ClipButton)`
   svg {
     width: 40px;
     height: 40px;
   }
 `;
+const ReviewButton = styled(ClipButton)`
+  svg {
+    color: #790000;
+  }
+`;
+const SaveButton = styled(ClipButton)`
+  svg {
+    color: #007900;
+  }
+`;
+const DeleteButton = styled(ClipButton)`
+  opacity: 0.5;
+`;
 export function Clip({ clip }: Props) {
   const { setCurrentClip, currentClip } = useStore();
+  const { moveClip, deleteClip } = useServer();
+  const [moving, setMoving] = useState(false);
 
-  const onClick = useCallback(() => {
+  const onPlayClick = useCallback(() => {
+    if (moving) return;
     setCurrentClip(clip);
-  }, [clip]);
+  }, [clip, setCurrentClip, setMoving, moving]);
+
+  const onSaveClick = useCallback(() => {
+    if (moving) return;
+    setMoving(true);
+    moveClip(clip, "saved");
+  }, [clip, moveClip, setMoving, moving]);
+
+  const onReviewClick = useCallback(() => {
+    if (moving) return;
+    setMoving(true);
+    moveClip(clip, "review");
+  }, [clip, moveClip, setMoving, moving]);
+
+  const onDeleteClick = useCallback(() => {
+    if (moving) return;
+
+    if (clip.type !== "trash") {
+      setMoving(true);
+      moveClip(clip, "trash");
+    } else if (confirm("For reals?")) {
+      setMoving(true);
+      deleteClip(clip);
+    }
+  }, [clip, moveClip, setMoving, moving]);
+
   return (
-    <Wrapper current={clip.name === currentClip?.name}>
+    <Wrapper current={clip.name === currentClip?.name} moving={moving}>
       <Image src={clip.paths.image} />
       <h3>{clip.name}</h3>
       <ButtonWrapper>
-        <PlayButton onClick={onClick}>
+        <PlayButton onClick={onPlayClick}>
           <PlayCircleOutlined />
         </PlayButton>
+
+        {clip.type === "review" ? (
+          <SaveButton title="Save clip for posting" onClick={onSaveClick}>
+            <CheckCircleOutlined />
+          </SaveButton>
+        ) : (
+          <ReviewButton title="Mark clip for review" onClick={onReviewClick}>
+            <CloseCircleOutlined />
+          </ReviewButton>
+        )}
+
+        <DeleteButton
+          title={
+            clip.type === "trash" ? "Delete clip forever" : "Move clip to trash"
+          }
+          onClick={onDeleteClick}
+        >
+          <DeleteOutlined />
+        </DeleteButton>
       </ButtonWrapper>
     </Wrapper>
   );

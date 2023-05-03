@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { UnparsedVideo, useStore } from "../store";
+import { IClip, UnparsedVideo, useStore } from "../store";
 import { useServer as useServerInner } from "../useServer";
 
 export interface ServerMessage {
@@ -14,6 +14,8 @@ export enum ServerMessageAction {
   SERVER_LOG = "server-log",
   WORD_PROGRESS = "word-progress",
   UPDATE_VIDEOS = "update-videos",
+  MOVE_CLIP = "move-clip",
+  DELETE_CLIP = "delete-clip",
 }
 
 export const useServer = () => {
@@ -40,12 +42,27 @@ export const useServer = () => {
     }
   });
 
-  const parseVideo = (video: UnparsedVideo) => {
+  const sendActionMessage = (action: ServerMessageAction, data: any) =>
     sendJson({
-      action: ServerMessageAction.PARSE_VIDEO,
-      data: video.name,
+      action,
+      data,
     });
-  };
 
-  return { parseVideo };
+  function parseVideo(video: UnparsedVideo) {
+    sendActionMessage(ServerMessageAction.PARSE_VIDEO, video.name);
+  }
+
+  function moveClip(clip: IClip, to: IClip["type"]) {
+    sendActionMessage(ServerMessageAction.MOVE_CLIP, {
+      clip: clip.name,
+      from: clip.type,
+      to,
+    });
+  }
+
+  function deleteClip(clip: IClip) {
+    sendActionMessage(ServerMessageAction.DELETE_CLIP, clip.name);
+  }
+
+  return { parseVideo, moveClip, deleteClip };
 };

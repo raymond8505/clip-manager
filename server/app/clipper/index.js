@@ -32,6 +32,7 @@ const {
   httpClipThumbsDir,
   reviewClipsDir,
   savedClipsDir,
+  trashClipsDir,
 } = require("./paths");
 
 const { getVideoLength, getClipThumbnail } = require("./helpers");
@@ -57,12 +58,14 @@ function fileToClip(file, dir) {
   const vidClip = `${dir}/${file}`;
   const length = getVideoLength(vidClip);
 
-  const video = `${httpClipsDir}/${file}`.replace(/\\/g, "/");
+  const type = path.basename(dir);
+  const video = `${httpClipsDir}/${type}/${file}`.replace(/\\/g, "/");
   const image = getClipThumbnail(vidClip, httpClipThumbsDir);
 
   return {
     name: file,
     length,
+    type,
     paths: {
       video,
       image,
@@ -76,12 +79,20 @@ function getClips() {
   return {
     review: filesToClips(reviewClipsDir),
     saved: filesToClips(savedClipsDir),
+    trash: filesToClips(trashClipsDir),
   };
 }
+
+const moveClip = (clipName, fromDir, toDir) =>
+  renameSync(
+    `${clipsDir}/${fromDir}/${clipName}`,
+    `${clipsDir}/${toDir}/${clipName}`
+  );
 module.exports = {
   getUnparsedVideos,
   getVideoLength,
   getClips,
+  moveClip,
   audioDir,
   videoDir,
   unParsedDir,
