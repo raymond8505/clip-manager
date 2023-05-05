@@ -55,7 +55,7 @@ export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
                 key: "review",
                 children: (
                   <Clips>
-                    {clips?.review?.map((clip, i) => {
+                    {clips?.review?.map((clip) => {
                       return (
                         <Clip
                           clip={clip}
@@ -71,11 +71,27 @@ export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
                 key: "saved",
                 children: (
                   <Clips>
-                    {clips?.saved?.map((clip, i) => {
+                    {clips?.saved?.map((clip) => {
                       return (
                         <Clip
                           clip={clip}
                           key={window.btoa(JSON.stringify([clip, "saved"]))}
+                        />
+                      );
+                    })}
+                  </Clips>
+                ),
+              },
+              {
+                label: "Posted",
+                key: "posted",
+                children: (
+                  <Clips>
+                    {clips?.posted?.map((clip) => {
+                      return (
+                        <Clip
+                          clip={clip}
+                          key={window.btoa(JSON.stringify([clip, "posted"]))}
                         />
                       );
                     })}

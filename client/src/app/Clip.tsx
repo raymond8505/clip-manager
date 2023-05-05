@@ -4,8 +4,10 @@ import { UnstyledButton } from "./App.styles";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
+  CloudUploadOutlined,
   DeleteOutlined,
   PlayCircleOutlined,
+  YoutubeOutlined,
 } from "@ant-design/icons";
 import { useCallback, useState } from "react";
 import { useServer } from "./useServer";
@@ -66,6 +68,11 @@ const ReviewButton = styled(ClipButton)`
     color: #790000;
   }
 `;
+const PostedButton = styled(ClipButton)`
+  svg {
+    color: #ff0000;
+  }
+`;
 const SaveButton = styled(ClipButton)`
   svg {
     color: #007900;
@@ -96,6 +103,12 @@ export function Clip({ clip }: Props) {
     moveClip(clip, "review");
   }, [clip, moveClip, setMoving, moving]);
 
+  const onPostedClick = useCallback(() => {
+    if (moving) return;
+    setMoving(true);
+    moveClip(clip, "posted");
+  }, [clip, moveClip, setMoving, moving]);
+
   const onDeleteClick = useCallback(() => {
     if (moving) return;
 
@@ -122,9 +135,14 @@ export function Clip({ clip }: Props) {
             <CheckCircleOutlined />
           </SaveButton>
         ) : (
-          <ReviewButton title="Mark clip for review" onClick={onReviewClick}>
-            <CloseCircleOutlined />
-          </ReviewButton>
+          <>
+            <ReviewButton title="Mark clip for review" onClick={onReviewClick}>
+              <CloseCircleOutlined />
+            </ReviewButton>
+            <PostedButton title="Mark clip as posted" onClick={onPostedClick}>
+              <YoutubeOutlined />
+            </PostedButton>
+          </>
         )}
 
         <DeleteButton

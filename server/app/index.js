@@ -60,6 +60,7 @@ function onMessage(rawMsg) {
             video,
             progress,
           });
+          console.log(progress);
         },
       });
       break;

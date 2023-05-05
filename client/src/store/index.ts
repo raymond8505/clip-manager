@@ -17,7 +17,7 @@ export interface UnparsedVideo {
 }
 
 export interface IClip extends Omit<UnparsedVideo, "parsingProgress" | "path"> {
-  type: "review" | "saved" | "trash";
+  type: "review" | "saved" | "trash" | "posted";
   paths: {
     video: string;
     image: string;
@@ -28,6 +28,7 @@ export interface IClips {
   review: IClip[];
   saved: IClip[];
   trash: IClip[];
+  posted: IClip[];
 }
 
 export interface Word {

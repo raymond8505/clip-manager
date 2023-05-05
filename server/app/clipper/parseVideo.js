@@ -1,7 +1,13 @@
 const { getClipThumbnail } = require("./helpers");
 const { existsSync, unlinkSync, renameSync } = require("fs");
 const { execSync } = require("child_process");
-const { unParsedDir, parsedDir, rawAudioDir, clipsDir } = require("./paths");
+const {
+  unParsedDir,
+  parsedDir,
+  rawAudioDir,
+  clipsDir,
+  reviewClipsDir,
+} = require("./paths");
 const reader = require("./vosk-reader.js");
 const { getClipsFromWords, getVideoLength } = require("./helpers");
 
@@ -70,7 +76,7 @@ async function parseVideo(videoToParse, options) {
     const start = Math.max(clip.end - 20, 0);
     const end = Math.min(clip.end + 10, duration);
 
-    const clipPath = `${clipsDir}/${videoToParse}_${i}.mp4`;
+    const clipPath = `${reviewClipsDir}/${videoToParse}_${i}.mp4`;
 
     if (existsSync(clipPath)) {
       unlinkSync(clipPath);

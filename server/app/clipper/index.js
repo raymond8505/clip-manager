@@ -33,6 +33,7 @@ const {
   reviewClipsDir,
   savedClipsDir,
   trashClipsDir,
+  postedClipsDir,
 } = require("./paths");
 
 const { getVideoLength, getClipThumbnail, fsThumbPath } = require("./helpers");
@@ -80,6 +81,7 @@ function getClips() {
     review: filesToClips(reviewClipsDir),
     saved: filesToClips(savedClipsDir),
     trash: filesToClips(trashClipsDir),
+    posted: filesToClips(postedClipsDir),
   };
 }
 
