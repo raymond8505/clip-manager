@@ -41,7 +41,7 @@ export interface Store {
   unparsedVideos: UnparsedVideo[];
   setUnparsedVideos: (videos: UnparsedVideo[]) => void;
   clips: IClips;
-  setClips: (clips: IClip[]) => void;
+  setClips: (clips: IClips) => void;
   updateParsingProgress: (progress: Progress) => void;
   getUnparsedVideoIndexByName: (name: string) => number | undefined;
   currentClip: IClip | null;
@@ -59,7 +59,12 @@ export const useStore = create<Store>(
       set({
         unparsedVideos,
       }),
-    clips: [],
+    clips: {
+      review: [],
+      saved: [],
+      trash: [],
+      posted: [],
+    },
     setClips: (clips) => set({ clips }),
     getUnparsedVideoIndexByName: (name) =>
       get().unparsedVideos.findIndex((vid) => vid.name === name),
