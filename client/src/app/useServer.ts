@@ -19,7 +19,13 @@ export enum ServerMessageAction {
 }
 
 export const useServer = () => {
-  const { setUnparsedVideos, updateParsingProgress, setClips } = useStore();
+  const {
+    setUnparsedVideos,
+    updateParsingProgress,
+    setClips,
+    getNextClip,
+    setCurrentClip,
+  } = useStore();
 
   const { sendJson } = useServerInner((rawMsg) => {
     const msg: ServerMessage = JSON.parse(rawMsg.data);
@@ -58,6 +64,12 @@ export const useServer = () => {
       from: clip.type,
       to,
     });
+
+    const nextClip = getNextClip(clip);
+
+    if (nextClip) {
+      setCurrentClip(nextClip);
+    }
   }
 
   function deleteClip(clip: IClip) {

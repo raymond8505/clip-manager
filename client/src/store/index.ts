@@ -46,6 +46,7 @@ export interface Store {
   getUnparsedVideoIndexByName: (name: string) => number | undefined;
   currentClip: IClip | null;
   setCurrentClip: (clip: IClip) => void;
+  getNextClip: (clip: IClip) => IClip | undefined;
 }
 export const useStore = create<Store>(
   (set, get): Store => ({
@@ -83,6 +84,23 @@ export const useStore = create<Store>(
         set({
           unparsedVideos,
         });
+      }
+    },
+    getNextClip: (clip) => {
+      if (get().currentClip?.name !== clip.name) return undefined;
+
+      const siblings = get().clips[clip.type];
+
+      if (siblings.length - 1 > 0) {
+        const clipIndex = siblings.findIndex(
+          (sibling) => sibling.name === clip.name
+        );
+
+        if (clipIndex < siblings.length - 1) {
+          return siblings[clipIndex + 1];
+        }
+
+        return undefined;
       }
     },
   })
