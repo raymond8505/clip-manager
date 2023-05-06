@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { IClip, UnparsedVideo, useStore } from "../store";
+import { IClip, IVideo, useStore } from "../store";
 import { useServer as useServerInner } from "../useServer";
 
 export interface ServerMessage {
@@ -16,11 +16,12 @@ export enum ServerMessageAction {
   UPDATE_VIDEOS = "update-videos",
   MOVE_CLIP = "move-clip",
   DELETE_CLIP = "delete-clip",
+  EMPTY_TRASH = "empty-trash",
 }
 
 export const useServer = () => {
   const {
-    setUnparsedVideos,
+    setVideos,
     updateParsingProgress,
     setClips,
     getNextClip,
@@ -31,10 +32,6 @@ export const useServer = () => {
     const msg: ServerMessage = JSON.parse(rawMsg.data);
 
     switch (msg.action) {
-      case ServerMessageAction.UNPARSED_VIDEOS:
-        console.log(msg.data);
-        setUnparsedVideos(msg.data);
-        break;
       case ServerMessageAction.SERVER_LOG:
         toast(msg.data);
         break;
@@ -42,7 +39,7 @@ export const useServer = () => {
         updateParsingProgress(msg.data);
         break;
       case ServerMessageAction.UPDATE_VIDEOS:
-        setUnparsedVideos(msg.data.unparsedVideos);
+        setVideos(msg.data.videos);
         setClips(msg.data.clips);
         break;
     }
@@ -54,7 +51,7 @@ export const useServer = () => {
       data,
     });
 
-  function parseVideo(video: UnparsedVideo) {
+  function parseVideo(video: IVideo) {
     sendActionMessage(ServerMessageAction.PARSE_VIDEO, video.name);
   }
 
@@ -76,5 +73,9 @@ export const useServer = () => {
     sendActionMessage(ServerMessageAction.DELETE_CLIP, clip.name);
   }
 
-  return { parseVideo, moveClip, deleteClip };
+  function emptyTrash(dir: "parsed" | "trash") {
+    sendActionMessage(ServerMessageAction.EMPTY_TRASH, dir);
+  }
+
+  return { parseVideo, moveClip, deleteClip, emptyTrash };
 };

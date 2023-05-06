@@ -1,14 +1,15 @@
 import { PanelGroup } from "react-resizable-panels";
 import { Panel } from "./App.styles";
 import { ResizeHandle } from "./ResizeHandle";
-import { IClips, UnparsedVideo } from "../store";
+import { IClips, IVideo } from "../store";
 import { VideoListItemButton } from "./VideoListItemButton";
 import { Clip } from "./Clip";
 import styled from "@emotion/styled";
 import { Button, Tabs } from "antd";
 import { useCallback } from "react";
+import { useServer } from "./useServer";
 export interface SidePanelProps {
-  unparsedVideos: UnparsedVideo[];
+  unparsedVideos: IVideo[];
   clips: IClips;
 }
 const EmptyTrash = styled(Button)`
@@ -26,8 +27,9 @@ const Clips = styled.ul`
   } */
 `;
 export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
+  const { emptyTrash } = useServer();
   const onEmptyTrashClick = useCallback(() => {
-    confirm("For Reals?");
+    emptyTrash("trash");
   }, []);
   return (
     <Panel collapsible={true} order={1} defaultSize={20}>

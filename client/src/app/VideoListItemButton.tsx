@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { UnparsedVideo } from "../store";
+import { IVideo } from "../store";
 import { ListItemButton } from "./App.styles";
 import { secondsToHMS } from "./helpers";
 import { useCallback } from "react";
@@ -28,7 +28,7 @@ const Length = styled.span`
   opacity: 0.5;
 `;
 interface Props {
-  video: UnparsedVideo;
+  video: IVideo;
 }
 export const VideoListItemButton = ({ video }: Props) => {
   const { parseVideo } = useServer();

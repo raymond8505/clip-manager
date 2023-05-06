@@ -15,6 +15,7 @@ const postedClipsDir = `${clipsDir}/posted`;
 const httpRoot = "http://localhost:8080";
 const httpVideoDir = `${httpRoot}/video`;
 const httpUnParsedDir = `${httpVideoDir}/unparsed`;
+const httpParsedDir = `${httpVideoDir}/parsed`;
 const httpClipsDir = `${httpVideoDir}/clips`;
 const httpClipThumbsDir = `${httpClipsDir}/thumbs`;
 
@@ -29,6 +30,7 @@ module.exports = {
   httpRoot,
   httpVideoDir,
   httpUnParsedDir,
+  httpParsedDir,
   httpClipsDir,
   httpClipThumbsDir,
   savedClipsDir,

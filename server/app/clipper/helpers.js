@@ -152,6 +152,7 @@ function getClipThumbnail(clipPath, returnBase = clipThumbsDir) {
 
   return toRet;
 }
+
 module.exports = {
   getDeletesFromWords,
   getClipsFromWords,

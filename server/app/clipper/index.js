@@ -28,6 +28,7 @@ const {
   clipsDir,
   clipThumbsDir,
   httpUnParsedDir,
+  httpParsedDir,
   httpClipsDir,
   httpClipThumbsDir,
   reviewClipsDir,
@@ -42,17 +43,26 @@ function getVideoFiles(dir) {
     return vid.search(/(mp4)$/) !== -1;
   });
 }
-function getUnparsedVideos() {
-  return getVideoFiles(unParsedDir).map((vid) => {
+
+function getVideos(fsDir, httpDir) {
+  return getVideoFiles(fsDir).map((vid) => {
     //const length = await getVideoDurationInSeconds(`${unParsedDir}/${vid}`);
-    const length = getVideoLength(`${unParsedDir}/${vid}`);
+    const length = getVideoLength(`${fsDir}/${vid}`);
 
     return {
       name: vid,
-      path: path.join(httpUnParsedDir, vid),
+      path: path.join(httpDir, vid),
       length,
     };
   });
+}
+
+function getUnparsedVideos() {
+  return getVideos(unParsedDir, httpUnParsedDir);
+}
+
+function getParsedVideos() {
+  return getVideos(parsedDir, httpParsedDir);
 }
 
 function fileToClip(file, dir) {
@@ -97,10 +107,12 @@ function deleteClip(clipName) {
 }
 module.exports = {
   getUnparsedVideos,
+  getParsedVideos,
   getVideoLength,
   getClips,
   moveClip,
   deleteClip,
+  getVideoFiles,
   audioDir,
   videoDir,
   unParsedDir,

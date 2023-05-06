@@ -9,14 +9,19 @@ export interface Progress {
     word: Word[];
   };
 }
-export interface UnparsedVideo {
+export interface IVideo {
   name: string;
   path: string;
   length: number;
   parsingProgress?: Progress["progress"];
 }
 
-export interface IClip extends Omit<UnparsedVideo, "parsingProgress" | "path"> {
+export interface IVideos {
+  parsed: IVideo[];
+  unparsed: IVideo[];
+}
+
+export interface IClip extends Omit<IVideo, "parsingProgress" | "path"> {
   type: "review" | "saved" | "trash" | "posted";
   paths: {
     video: string;
@@ -38,8 +43,10 @@ export interface Word {
 }
 
 export interface Store {
-  unparsedVideos: UnparsedVideo[];
-  setUnparsedVideos: (videos: UnparsedVideo[]) => void;
+  //unparsedVideos: UnparsedVideo[];
+  //setUnparsedVideos: (videos: UnparsedVideo[]) => void;
+  videos: IVideos;
+  setVideos: (videos: IVideos) => void;
   clips: IClips;
   setClips: (clips: IClips) => void;
   updateParsingProgress: (progress: Progress) => void;
@@ -55,11 +62,11 @@ export const useStore = create<Store>(
       set({
         currentClip: clip,
       }),
-    unparsedVideos: [],
-    setUnparsedVideos: (unparsedVideos) =>
-      set({
-        unparsedVideos,
-      }),
+    videos: {
+      parsed: [],
+      unparsed: [],
+    },
+    setVideos: (videos) => set({ videos }),
     clips: {
       review: [],
       saved: [],
@@ -68,21 +75,26 @@ export const useStore = create<Store>(
     },
     setClips: (clips) => set({ clips }),
     getUnparsedVideoIndexByName: (name) =>
-      get().unparsedVideos.findIndex((vid) => vid.name === name),
+      get().videos.unparsed.findIndex((vid) => vid.name === name),
     updateParsingProgress: (progress) => {
       const index = get().getUnparsedVideoIndexByName(progress.video);
 
       if (index !== undefined) {
-        const video: UnparsedVideo = {
-          ...get().unparsedVideos[index],
+        const video: IVideo = {
+          ...get().videos.unparsed[index],
           parsingProgress: progress.progress,
         };
 
-        const unparsedVideos = [...get().unparsedVideos];
-        unparsedVideos[index] = video;
+        const unparsed = [...get().videos.unparsed];
+        unparsed[index] = video;
 
         set({
-          unparsedVideos,
+          videos: {
+            unparsed,
+            parsed: {
+              ...get().videos.parsed,
+            },
+          },
         });
       }
     },

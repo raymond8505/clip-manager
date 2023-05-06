@@ -1,10 +1,15 @@
+const { unlinkSync } = require("fs");
 const {
   getUnparsedVideos,
+  getParsedVideos,
   getClips,
   moveClip,
   deleteClip,
+  getVideoFiles,
 } = require("./clipper");
+
 const parseVideo = require("./clipper/parseVideo");
+const { trashClipsDir, parsedDir } = require("./clipper/paths");
 
 let socket;
 let server;
@@ -19,10 +24,6 @@ function sendMessage(action, data) {
 }
 function log(logMsg) {
   sendMessage("server-log", logMsg);
-}
-function sendUnparsedVideos() {
-  const unparsedVids = getUnparsedVideos();
-  sendMessage("unparsed-videos", unparsedVids);
 }
 /**
  * Handles all messages coming from the client. This is your entry point to your server's actual
@@ -47,6 +48,26 @@ function onMessage(rawMsg) {
       deleteClip(msg.data);
       sendUpdateVideos();
       break;
+    case "empty-trash":
+      if (!["trash", "parsed"].includes(msg.data)) {
+        log(`${msg.data} must be one of "trash" or "parsed"`);
+        return;
+      }
+
+      if (msg.data === "parsed") {
+        getVideoFiles(parsedDir).forEach((vid) => {
+          unlinkSync(`${parsedDir}/${vid}`);
+        });
+      } else {
+        getClips().trash.forEach((clip) => {
+          deleteClip(clip.name);
+        });
+      }
+
+      log(`${msg.data} emptied`);
+      sendUpdateVideos();
+
+      break;
     case "parse-video":
       parseVideo(video, {
         log,
@@ -70,7 +91,10 @@ function onMessage(rawMsg) {
 
 function sendUpdateVideos() {
   sendMessage("update-videos", {
-    unparsedVideos: getUnparsedVideos(),
+    videos: {
+      unparsed: getUnparsedVideos(),
+      parsed: getParsedVideos(),
+    },
     clips: getClips(),
   });
 }
