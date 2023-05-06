@@ -1,4 +1,4 @@
-const { getClipThumbnail } = require("./helpers");
+const { getClipThumbnail, setPermissions } = require("./helpers");
 const { existsSync, unlinkSync, renameSync } = require("fs");
 const { execSync } = require("child_process");
 const {
@@ -60,6 +60,7 @@ async function parseVideo(videoToParse, options) {
   );
 
   log(`Created ${audioToParse}`);
+  setPermissions(audioToParse);
 
   const duration = getVideoLength(videoToParsePath);
   const results = await readAudio(audioToParse, duration, onWordProgress);
@@ -87,6 +88,8 @@ async function parseVideo(videoToParse, options) {
     execSync(
       `ffmpeg -i ${videoToParsePath}  -loglevel error -ss ${start} -to ${end} ${clipPath}`
     );
+
+    setPermissions(clipPath);
 
     getClipThumbnail(clipPath);
   });

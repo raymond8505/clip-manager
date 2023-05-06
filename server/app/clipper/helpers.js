@@ -1,7 +1,7 @@
 const { execSync } = require("child_process");
 const { basename } = require("path");
 const { clipThumbsDir, httpClipThumbsDir } = require("./paths");
-const { existsSync } = require("fs");
+const { existsSync, chmodSync } = require("fs");
 
 function secondsToHMS(value) {
   const sec = parseInt(value, 10); // convert value to number if it's string
@@ -136,10 +136,12 @@ function makeClipThumbnail(clipPath) {
   execSync(
     `ffmpeg -i "${clipPath}" -loglevel error -ss 00:00:01.000 -vframes 1 "${thumbPath}"`
   );
-
+  setPermissions(thumbPath);
   return thumbPath;
 }
-
+function setPermissions(file) {
+  chmodSync(file, 0777);
+}
 function getClipThumbnail(clipPath, returnBase = clipThumbsDir) {
   const clipName = basename(clipPath);
   const toRet = `${returnBase}/${clipName}.jpg`;
@@ -166,4 +168,5 @@ module.exports = {
   fsThumbPath,
   httpThumbPath,
   getClipThumbnail,
+  setPermissions,
 };

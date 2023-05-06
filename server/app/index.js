@@ -45,6 +45,7 @@ function onMessage(rawMsg) {
       break;
     case "delete-clip":
       deleteClip(msg.data);
+      sendUpdateVideos();
       break;
     case "parse-video":
       parseVideo(video, {
