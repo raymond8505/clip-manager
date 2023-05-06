@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { IVideo } from "../store";
 import { ListItemButton } from "./App.styles";
-import { secondsToHMS } from "./helpers";
+import { secondsToHMS, trimExtension } from "./helpers";
 import { useCallback } from "react";
 import { useServer } from "./useServer";
 import { toast } from "react-toastify";
@@ -43,7 +43,7 @@ export const VideoListItemButton = ({ video }: Props) => {
       onClick={onClick}
       disabled={video.parsingProgress !== undefined || parsing}
     >
-      <span>{video.name}</span>
+      <span>{trimExtension(video.name)}</span>
       {video.parsingProgress !== undefined && (
         <span>
           {Math.round(video.parsingProgress.perc * 100)}% "

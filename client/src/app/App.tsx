@@ -18,7 +18,7 @@ export const App = () => {
       <ToastContainer />
       <MainWrapper>
         <PanelGroup direction="horizontal">
-          <SidePanel unparsedVideos={videos.unparsed} clips={clips} />
+          <SidePanel videos={videos} clips={clips} />
           <ResizeHandle direction="horizontal" />
           <EditorPanel />
         </PanelGroup>

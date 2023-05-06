@@ -17,3 +17,5 @@ export function secondsToHMS(value) {
 
   return `${hoursStr}${minutesStr}:${secondsStr}`; // Return is HH : MM : SS
 }
+
+export const trimExtension = (path: string) => path.replace(/\.[^.]+$/, "");

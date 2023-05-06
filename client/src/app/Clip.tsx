@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import { useCallback, useState } from "react";
 import { useServer } from "./useServer";
+import { trimExtension } from "./helpers";
 
 interface Props {
   clip: IClip;
@@ -124,7 +125,7 @@ export function Clip({ clip }: Props) {
   return (
     <Wrapper current={clip.name === currentClip?.name} moving={moving}>
       <Image src={clip.paths.image} />
-      <h3>{clip.name}</h3>
+      <h3>{trimExtension(clip.name)}</h3>
       <ButtonWrapper>
         <PlayButton onClick={onPlayClick}>
           <PlayCircleOutlined />

@@ -1,7 +1,7 @@
 import { PanelGroup } from "react-resizable-panels";
 import { Panel } from "./App.styles";
 import { ResizeHandle } from "./ResizeHandle";
-import { IClips, IVideo } from "../store";
+import { IClips, IVideos } from "../store";
 import { VideoListItemButton } from "./VideoListItemButton";
 import { Clip } from "./Clip";
 import styled from "@emotion/styled";
@@ -9,7 +9,7 @@ import { Button, Tabs } from "antd";
 import { useCallback } from "react";
 import { useServer } from "./useServer";
 export interface SidePanelProps {
-  unparsedVideos: IVideo[];
+  videos: IVideos;
   clips: IClips;
 }
 const EmptyTrash = styled(Button)`
@@ -26,7 +26,7 @@ const Clips = styled.ul`
     }
   } */
 `;
-export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
+export const SidePanel = ({ videos, clips }: SidePanelProps) => {
   const { emptyTrash } = useServer();
   const onEmptyTrashClick = useCallback(() => {
     emptyTrash("trash");
@@ -35,16 +35,41 @@ export const SidePanel = ({ unparsedVideos, clips }: SidePanelProps) => {
     <Panel collapsible={true} order={1} defaultSize={20}>
       <PanelGroup direction="vertical">
         <Panel collapsible={true} defaultSize={25} order={1}>
-          <h2>Unparsed Videos</h2>
-          <ul>
-            {unparsedVideos.map((video, i) => {
-              return (
-                <li key={`${i}-${video.name}`}>
-                  <VideoListItemButton video={video} />
-                </li>
-              );
-            })}
-          </ul>
+          <h2>Videos</h2>
+          <Tabs
+            items={[
+              {
+                label: "Unparsed",
+                key: "unparsed",
+                children: (
+                  <ul>
+                    {videos.unparsed.map((video, i) => {
+                      return (
+                        <li key={`${i}-${video.name}`}>
+                          <VideoListItemButton video={video} />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ),
+              },
+              {
+                label: "Parsed",
+                key: "parsed",
+                children: (
+                  <ul>
+                    {videos.parsed.map((video, i) => {
+                      return (
+                        <li key={`${i}-${video.name}`}>
+                          <VideoListItemButton video={video} />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ),
+              },
+            ]}
+          />
         </Panel>
         <ResizeHandle direction="vertical" />
         <Panel collapsible={true} order={2}>
