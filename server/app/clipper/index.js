@@ -52,6 +52,7 @@ function getVideos(fsDir, httpDir) {
     return {
       name: vid,
       path: path.join(httpDir, vid),
+      type: path.basename(fsDir),
       length,
     };
   });

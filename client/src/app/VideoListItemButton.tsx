@@ -6,6 +6,7 @@ import { useCallback } from "react";
 import { useServer } from "./useServer";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { css } from "@emotion/react";
 
 const InnerButton = styled(ListItemButton)`
   display: flex;
@@ -34,6 +35,7 @@ export const VideoListItemButton = ({ video }: Props) => {
   const { parseVideo } = useServer();
   const [parsing, setParsing] = useState(false);
   const onClick = useCallback(() => {
+    if (video.type === "parsed") return;
     toast(`Parsing started for "${video.name}"`);
     parseVideo(video);
     setParsing(true);
@@ -42,6 +44,9 @@ export const VideoListItemButton = ({ video }: Props) => {
     <InnerButton
       onClick={onClick}
       disabled={video.parsingProgress !== undefined || parsing}
+      css={css`
+        ${video.type === "parsed" && "cursor: auto;"}
+      `}
     >
       <span>{trimExtension(video.name)}</span>
       {video.parsingProgress !== undefined && (

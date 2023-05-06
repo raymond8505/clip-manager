@@ -12,6 +12,7 @@ export interface Progress {
 export interface IVideo {
   name: string;
   path: string;
+  type: "parsed" | "unparsed";
   length: number;
   parsingProgress?: Progress["progress"];
 }
@@ -91,9 +92,7 @@ export const useStore = create<Store>(
         set({
           videos: {
             unparsed,
-            parsed: {
-              ...get().videos.parsed,
-            },
+            parsed: [...get().videos.parsed],
           },
         });
       }
