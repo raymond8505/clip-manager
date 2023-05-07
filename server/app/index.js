@@ -9,7 +9,12 @@ const {
 } = require("./clipper");
 
 const parseVideo = require("./clipper/parseVideo");
-const { trashClipsDir, parsedDir } = require("./clipper/paths");
+const { trashClipsDir, parsedDir, unParsedDir } = require("./clipper/paths");
+const chokidar = require("chokidar");
+
+const unparsedWatcher = chokidar.watch(unParsedDir, {
+  persistent: true,
+});
 
 let socket;
 let server;
@@ -110,6 +115,14 @@ function onConnection(socketIn, serverIn) {
   server = serverIn;
 
   sendUpdateVideos();
+
+  unparsedWatcher
+    .on("add", () => {
+      sendUpdateVideos();
+    })
+    .on("unlink", () => {
+      sendUpdateVideos();
+    });
 }
 
 /**

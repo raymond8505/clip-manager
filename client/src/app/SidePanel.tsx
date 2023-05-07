@@ -43,7 +43,7 @@ export const SidePanel = ({ videos, clips }: SidePanelProps) => {
                 key: "unparsed",
                 children: (
                   <ul>
-                    {videos?.unparsed?.map((video, i) => {
+                    {videos.unparsed.map((video, i) => {
                       return (
                         <li key={`${i}-${video.name}`}>
                           <VideoListItemButton video={video} />
@@ -58,7 +58,7 @@ export const SidePanel = ({ videos, clips }: SidePanelProps) => {
                 key: "parsed",
                 children: (
                   <div>
-                    {videos?.parsed?.length > 0 && (
+                    {videos.parsed.length > 0 && (
                       <EmptyTrash
                         onClick={() => {
                           emptyTrash("parsed");
@@ -68,7 +68,7 @@ export const SidePanel = ({ videos, clips }: SidePanelProps) => {
                       </EmptyTrash>
                     )}
                     <ul>
-                      {videos?.parsed?.map((video, i) => {
+                      {videos.parsed.map((video, i) => {
                         return (
                           <li key={`${i}-${video.name}`}>
                             <VideoListItemButton video={video} />
