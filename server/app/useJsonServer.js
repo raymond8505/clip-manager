@@ -3,16 +3,17 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-export function useJsonServer(endpoint) {
+module.exports = function useJsonServer(endpoint) {
   /**
    * Read all the items from the server, update the items array when done
    * @returns the Promise from the underlying fetch call to the server
    */
-  const readItems = new Promise((resolve) => {
-    fetch(`http://localhost:3001/${endpoint}`).then((res) =>
-      res.json().then(resolve)
-    );
-  });
+  const readItems = () =>
+    new Promise((resolve) => {
+      fetch(`http://localhost:3001/${endpoint}`).then((res) =>
+        res.json().then(resolve)
+      );
+    });
 
   /**
    * Creates an item and returns a Promise containing a new list of items from the server
@@ -55,10 +56,9 @@ export function useJsonServer(endpoint) {
     });
 
   return {
-    items,
     createItem,
     readItems,
     updateItem,
     deleteItem,
   };
-}
+};

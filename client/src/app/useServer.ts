@@ -51,8 +51,11 @@ export const useServer = () => {
       data,
     });
 
-  function parseVideo(video: IVideo) {
-    sendActionMessage(ServerMessageAction.PARSE_VIDEO, video.name);
+  function parseVideo(video: IVideo, twitchUrl: string) {
+    sendActionMessage(ServerMessageAction.PARSE_VIDEO, {
+      video: video.name,
+      twitchUrl,
+    });
   }
 
   function moveClip(clip: IClip, to: IClip["type"]) {

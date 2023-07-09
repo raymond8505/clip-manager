@@ -144,7 +144,7 @@ function makeClipThumbnail(clipPath) {
   return thumbPath;
 }
 function setPermissions(path) {
-  chmodSync(path, 0777);
+  chmodSync(path, 0o777);
 }
 function getClipThumbnail(clipPath, returnBase = clipThumbsDir) {
   const clipName = basename(clipPath);

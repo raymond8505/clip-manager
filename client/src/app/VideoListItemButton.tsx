@@ -36,10 +36,15 @@ export const VideoListItemButton = ({ video }: Props) => {
   const [parsing, setParsing] = useState(false);
   const onClick = useCallback(() => {
     if (video.type === "parsed") return;
-    toast(`Parsing started for "${video.name}"`);
-    parseVideo(video);
-    setParsing(true);
-  }, [video]);
+
+    const twitchUrl = prompt("Enter Twitch URL");
+
+    if (twitchUrl && twitchUrl !== "") {
+      toast(`Parsing started for "${video.name}"`);
+      parseVideo(video, twitchUrl);
+      setParsing(true);
+    }
+  }, [video, parseVideo]);
   return (
     <InnerButton
       onClick={onClick}

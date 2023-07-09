@@ -1,4 +1,4 @@
-const { unlinkSync } = require("fs");
+const { unlinkSync, basename } = require("fs");
 const {
   getUnparsedVideos,
   getParsedVideos,
@@ -11,9 +11,12 @@ const {
 const { parseVideo, setPermissions } = require("./clipper/parseVideo");
 const { trashClipsDir, parsedDir, unParsedDir } = require("./clipper/paths");
 const chokidar = require("chokidar");
+const useJsonServer = require("./useJsonServer");
 
 let socket;
 let server;
+
+const { createItem } = useJsonServer("clips");
 
 function sendMessage(action, data) {
   return socket.send(
@@ -71,7 +74,7 @@ function onMessage(rawMsg) {
 
       break;
     case "parse-video":
-      const video = msg.data;
+      const { video, twitchUrl } = msg.data;
       parseVideo(video, {
         log,
         onAudioParsed: (results) => {
@@ -79,7 +82,15 @@ function onMessage(rawMsg) {
         },
         onClipsParsed: (clips) => {
           sendUpdateVideos();
-          console.log({ clips });
+          console.log({ twitchUrl, clips });
+
+          clips.forEach((clip, i) => {
+            createItem({
+              twitchUrl,
+              start: clip.start,
+              name: `${video}_${i}`,
+            });
+          });
         },
         onWordProgress: (progress) => {
           sendMessage("word-progress", {

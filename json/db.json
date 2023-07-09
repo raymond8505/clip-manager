@@ -1,3 +1,16 @@
 {
-  "clips": []
+  "clips": [
+    {
+      "twitchUrl": "https://www.twitch.tv/videos/1867417149",
+      "start": 2.07,
+      "name": "short-test.mp4_0",
+      "id": 1
+    },
+    {
+      "twitchUrl": "https://www.twitch.tv/videos/1867417149",
+      "start": 2.07,
+      "name": "short-test.mp4_0",
+      "id": 2
+    }
+  ]
 }
