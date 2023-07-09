@@ -4,7 +4,6 @@ import { UnstyledButton } from "./App.styles";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
-  CloudUploadOutlined,
   DeleteOutlined,
   PlayCircleOutlined,
   YoutubeOutlined,
@@ -12,7 +11,7 @@ import {
 import { useCallback, useState } from "react";
 import { useServer } from "./useServer";
 import { trimExtension } from "./helpers";
-
+import { ClipName } from "./ClipName";
 interface Props {
   clip: IClip;
 }
@@ -125,7 +124,7 @@ export function Clip({ clip }: Props) {
   return (
     <Wrapper current={clip.name === currentClip?.name} moving={moving}>
       <Image src={clip.paths.image} />
-      <h3>{trimExtension(clip.name)}</h3>
+      <ClipName clip={clip} />
       <ButtonWrapper>
         <PlayButton onClick={onPlayClick}>
           <PlayCircleOutlined />

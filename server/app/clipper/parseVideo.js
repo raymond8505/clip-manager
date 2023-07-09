@@ -99,4 +99,7 @@ async function parseVideo(videoToParse, options) {
   log("DONE!");
   onClipsParsed(clips);
 }
-module.exports = parseVideo;
+module.exports = {
+  parseVideo,
+  setPermissions,
+};

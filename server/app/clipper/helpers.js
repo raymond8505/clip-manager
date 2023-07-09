@@ -92,7 +92,11 @@ const getClipsFromWords = (words) => {
     results.push(alt.result.find((result) => hasClip(result.word)));
   });
 
-  return results;
+  //filter out duplicate clips with same starting point
+  return results.filter(
+    (clip, i) =>
+      results.findIndex((toFind) => toFind.start === clip.start) === i
+  );
 };
 
 const getDeletesFromWords = (words) => {
@@ -139,8 +143,8 @@ function makeClipThumbnail(clipPath) {
   setPermissions(thumbPath);
   return thumbPath;
 }
-function setPermissions(file) {
-  chmodSync(file, 0777);
+function setPermissions(path) {
+  chmodSync(path, 0777);
 }
 function getClipThumbnail(clipPath, returnBase = clipThumbsDir) {
   const clipName = basename(clipPath);

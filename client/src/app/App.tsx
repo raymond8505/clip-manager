@@ -15,7 +15,7 @@ export const App = () => {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer hideProgressBar={true} theme="dark" />
       <MainWrapper>
         <PanelGroup direction="horizontal">
           <SidePanel videos={videos} clips={clips} />

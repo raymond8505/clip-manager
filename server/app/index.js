@@ -8,13 +8,9 @@ const {
   getVideoFiles,
 } = require("./clipper");
 
-const parseVideo = require("./clipper/parseVideo");
+const { parseVideo, setPermissions } = require("./clipper/parseVideo");
 const { trashClipsDir, parsedDir, unParsedDir } = require("./clipper/paths");
 const chokidar = require("chokidar");
-
-const unparsedWatcher = chokidar.watch(unParsedDir, {
-  persistent: true,
-});
 
 let socket;
 let server;
@@ -41,7 +37,7 @@ function onMessage(rawMsg) {
   console.log("message received", rawMsg.toString());
 
   const msg = JSON.parse(rawMsg.toString());
-  const video = msg.data;
+
   switch (msg.action) {
     case "move-clip":
       const { clip, from, to } = msg.data;
@@ -60,6 +56,7 @@ function onMessage(rawMsg) {
       }
 
       if (msg.data === "parsed") {
+        //todo delete the wav too
         getVideoFiles(parsedDir).forEach((vid) => {
           unlinkSync(`${parsedDir}/${vid}`);
         });
@@ -74,6 +71,7 @@ function onMessage(rawMsg) {
 
       break;
     case "parse-video":
+      const video = msg.data;
       parseVideo(video, {
         log,
         onAudioParsed: (results) => {
@@ -81,13 +79,14 @@ function onMessage(rawMsg) {
         },
         onClipsParsed: (clips) => {
           sendUpdateVideos();
+          console.log({ clips });
         },
         onWordProgress: (progress) => {
           sendMessage("word-progress", {
             video,
             progress,
           });
-          console.log(progress);
+          //console.log(progress);
         },
       });
       break;
@@ -104,6 +103,18 @@ function sendUpdateVideos() {
   });
 }
 
+const unparsedWatcher = chokidar.watch(unParsedDir, {
+  persistent: true,
+});
+
+function onAdd(path) {
+  sendUpdateVideos();
+  setPermissions(path);
+}
+
+function onUnlink() {
+  sendUpdateVideos();
+}
 /**
  * When the client makes a connection. Use this to initialize stuff for
  * the server app
@@ -116,13 +127,9 @@ function onConnection(socketIn, serverIn) {
 
   sendUpdateVideos();
 
-  unparsedWatcher
-    .on("add", () => {
-      sendUpdateVideos();
-    })
-    .on("unlink", () => {
-      sendUpdateVideos();
-    });
+  unparsedWatcher.off("add", onAdd);
+  unparsedWatcher.off("unlink", onUnlink);
+  unparsedWatcher.on("add", onAdd).on("unlink", onUnlink);
 }
 
 /**
